@@ -1,0 +1,73 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["react", "react-hooks", "simple-import-sort", "jsx-a11y"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "semi": ["error", "always"],
+    "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/semi": "off",
+    "@typescript-eslint/indent": 0,
+    "@typescript-eslint/member-delimiter-style": 0,
+    "@typescript-eslint/no-empty-interface": 0,
+    "@typescript-eslint/no-empty-function": 0,
+    "@typescript-eslint/explicit-module-boundary-types": 0,
+    "@typescript-eslint/prefer-interface": 0,
+    "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+    "@typescript-eslint/camelcase": 0,
+    "react/prop-types": 0,
+    "react/no-children-prop": 1,
+    "react/display-name": 0,
+    "react/jsx-curly-brace-presence": 2,
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "jsx-a11y/anchor-is-valid": 1,
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
+    "@typescript-eslint/ban-ts-comment": "off",
+    "eqeqeq": 2,
+    "@typescript-eslint/no-unused-vars": [
+      2,
+      { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
+    ],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
+    "no-nested-ternary": 2,
+    "no-console": "warn",
+    // "no-debugger": "error",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["error"],
+    "@typescript-eslint/no-use-before-define": "warn",
+    "spaced-comment": ["error", "always", { "exceptions": ["-+"] }],
+    "@typescript-eslint/prefer-optional-chain": "error",
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
+    "react/jsx-handler-names": [
+      "warn",
+      {
+        "eventHandlerPrefix": "handle|toggle",
+        "checkLocalVariables": false
+      }
+    ],
+    "max-lines": ["error", 300],
+    "react/jsx-boolean-value": "warn",
+    "no-duplicate-imports": "error",
+    "jsx-a11y/no-autofocus": "off",
+    "jsx-a11y/no-static-element-interactions": "off"
+  }
+}

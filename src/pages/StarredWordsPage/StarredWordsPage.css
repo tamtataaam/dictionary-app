@@ -1,0 +1,7 @@
+.starred-words__title {
+    @apply text-2xl font-bold my-6;
+}
+
+.starred-words__main {
+    @apply flex flex-row gap-10;
+}

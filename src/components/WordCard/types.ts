@@ -1,13 +1,10 @@
-export interface Word {
-  id: string;
-  word: string;
-  partOfSpeech: string;
-  shortdef: string[];
-  starred: boolean;
-  order: number;
-}
+import { Word } from 'store/dictionary';
 
-export interface WordProps {
+export interface WordCardProps {
   word: Word;
-  sort?: true;
+  sort?: boolean;
+  draggable?: boolean;
+  onDragStart?: (word: Word) => void;
+  onDragOver?: (event: React.DragEvent<HTMLDivElement>) => void;
+  onDrop?: (event: React.DragEvent<HTMLDivElement>, word: Word) => void;
 }

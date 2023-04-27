@@ -1,7 +1,14 @@
-import { Word } from 'components/WordCard/types';
+export interface Word {
+  id: string;
+  word: string;
+  partOfSpeech: string;
+  shortdef: string[];
+  starred: boolean;
+  order: number;
+}
 
 export interface DictionaryState {
-  words: Word[] | [];
+  words: Word[];
   starredWords: Word[];
   loading: boolean;
 }

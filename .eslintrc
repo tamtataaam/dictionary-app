@@ -48,7 +48,7 @@
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "error",
     "no-nested-ternary": 2,
-    "no-console": "warn",
+    "no-console": "off",
     // "no-debugger": "error",
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": ["error"],

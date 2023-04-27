@@ -1,6 +1,6 @@
-import { Word } from 'components/WordCard/types';
+import { Word } from 'store/dictionary';
 
 export interface WordsContainerProps {
   words: Word[];
-  sort?: true;
+  sort?: boolean;
 }

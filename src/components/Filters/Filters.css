@@ -1,0 +1,11 @@
+.filters-form {
+    @apply flex flex-col my-4;
+}
+
+.filters-form__label {
+    @apply flex items-center gap-2;
+}
+
+.filters-form__checkbox {
+    @apply w-4 h-4;
+}

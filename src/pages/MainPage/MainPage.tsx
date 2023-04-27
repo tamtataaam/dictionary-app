@@ -1,6 +1,8 @@
-import { SearchContainer, WordsContainer } from 'components';
-import { useAppDispatch, useAppSelector } from 'hooks';
-import { useState } from 'react';
+import './MainPage.css';
+
+import { SearchForm, WordsContainer } from 'components';
+import { useAppDispatch, useAppSelector, useDebounce } from 'hooks';
+import { useEffect, useState } from 'react';
 import { searchDictionary, wordsSelector } from 'store/dictionary';
 
 export const MainPage = () => {
@@ -8,18 +10,16 @@ export const MainPage = () => {
   const [searchValue, setSearchValue] = useState('');
   const words = useAppSelector(wordsSelector);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(event.target.value);
-    dispatch(searchDictionary(event.target.value));
-  };
+  const debouncedSearchValue = useDebounce(searchValue, 600);
+
+  useEffect(() => {
+    dispatch(searchDictionary(debouncedSearchValue));
+  }, [debouncedSearchValue, dispatch]);
 
   return (
-    <div className="flex flex-row gap-10 my-8">
-      <SearchContainer
-        handleInputChange={handleInputChange}
-        searchValue={searchValue}
-      />
+    <main className="main-page">
+      <SearchForm searchValue={searchValue} setSearchValue={setSearchValue} />
       <WordsContainer words={words} />
-    </div>
+    </main>
   );
 };

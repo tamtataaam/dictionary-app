@@ -1,12 +1,13 @@
+import './WordsContainer.css';
+
 import { WordCard } from 'components/WordCard';
-import { Word } from 'components/WordCard/types';
 import { useAppDispatch } from 'hooks';
-import { useState } from 'react';
-import { setDragStarredWord } from 'store/dictionary';
+import { DragEvent, FC, useState } from 'react';
+import { setDragStarredWord, Word } from 'store/dictionary';
 
 import { WordsContainerProps } from './types';
 
-export const WordsContainer = ({ words, sort }: WordsContainerProps) => {
+export const WordsContainer: FC<WordsContainerProps> = ({ words, sort }) => {
   const [currentWord, setCurrentWord] = useState<Word | null>(null);
   const dispatch = useAppDispatch();
 
@@ -14,38 +15,34 @@ export const WordsContainer = ({ words, sort }: WordsContainerProps) => {
     setCurrentWord(wordCard);
   };
 
-  const dragOverHandler = (e: React.DragEvent<HTMLDivElement>) => {
+  const dragOverHandler = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
 
-  const dropHandler = (e: React.DragEvent<HTMLDivElement>, wordCard: Word) => {
+  const dropHandler = (e: DragEvent<HTMLDivElement>, wordCard: Word) => {
     e.preventDefault();
     dispatch(setDragStarredWord({ wordCard, currentWord }));
   };
 
-  const sortWords = (a: Word, b: Word) => {
-    return a.order > b.order ? 1 : -1;
-  };
+  const sortWords = (a: Word, b: Word) => (a.order > b.order ? 1 : -1);
 
   return (
-    <div className="flex-auto flex flex-col gap-4 mb-10">
+    <div className="words-container">
       {sort
         ? [...words].sort(sortWords).map((word) => {
             return (
-              <div
-                draggable
+              <WordCard
                 key={word.id}
-                onDragStart={() => dragStartHandler(word)}
+                sort
+                draggable
+                word={word}
+                onDragStart={dragStartHandler}
                 onDragOver={dragOverHandler}
-                onDrop={(e) => dropHandler(e, word)}
-              >
-                <WordCard word={word} sort />
-              </div>
+                onDrop={dropHandler}
+              />
             );
           })
-        : words.map((word) => {
-            return <WordCard key={word.id} word={word} />;
-          })}
+        : words.map((word) => <WordCard key={word.id} word={word} />)}
     </div>
   );
 };

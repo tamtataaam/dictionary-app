@@ -1,12 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Word } from 'components/WordCard/types';
+import { fetchDictionary, starredWordsFromLocal } from 'api';
+import { getDragStarredWordState, transformServerResponse } from 'utils';
 
-import { DictionaryState, WordResponse } from './types';
-
-const API = 'https://dictionaryapi.com/api/v3/references/collegiate/json/';
-const API_KEY = '1d2cee71-7df2-47c2-b497-1de2712f05c4';
-
-const starredWordsFromLocal = localStorage.getItem('starredWords');
+import { DictionaryState } from './types';
 
 const initialState: DictionaryState = {
   words: [],
@@ -17,8 +13,7 @@ const initialState: DictionaryState = {
 export const searchDictionary = createAsyncThunk(
   'dictionary/search',
   async (query: string) => {
-    const response = await fetch(`${API}${query}?key=${API_KEY}`);
-    return await response.json();
+    return await fetchDictionary(query);
   }
 );
 
@@ -26,7 +21,7 @@ const dictionarySlice = createSlice({
   name: 'dictionary',
   initialState,
   reducers: {
-    toggleFavorite: (state, action) => {
+    toggleStarredWord: (state, action) => {
       const wordIndex = state.starredWords.findIndex(
         (word) => word.id === action.payload.id
       );
@@ -53,15 +48,11 @@ const dictionarySlice = createSlice({
       localStorage.setItem('starredWords', JSON.stringify(state.starredWords));
     },
     setDragStarredWord: (state, action) => {
-      state.starredWords = state.starredWords.map((word) => {
-        if (word.id === action.payload.wordCard.id) {
-          return { ...word, order: action.payload.currentWord.order };
-        }
-        if (word.id === action.payload.currentWord.id) {
-          return { ...word, order: action.payload.wordCard.order };
-        }
-        return word;
-      });
+      state.starredWords = getDragStarredWordState(
+        state.starredWords,
+        action.payload.wordCard,
+        action.payload.currentWord
+      );
       localStorage.setItem('starredWords', JSON.stringify(state.starredWords));
     },
   },
@@ -71,21 +62,7 @@ const dictionarySlice = createSlice({
         state.loading = true;
       })
       .addCase(searchDictionary.fulfilled, (state, action) => {
-        state.words = action.payload
-          .map((item: WordResponse, index: number) => {
-            const starredWord = state.starredWords.find(
-              (word) => word.id === item.meta?.uuid
-            );
-            return {
-              id: item.meta?.uuid,
-              word: item.hwi?.hw,
-              partOfSpeech: item.fl,
-              shortdef: item.shortdef,
-              starred: starredWord ? true : false,
-              order: index,
-            };
-          })
-          .filter((el: Word) => el.id !== undefined);
+        state.words = transformServerResponse(state, action.payload);
         state.loading = false;
       })
       .addCase(searchDictionary.rejected, (state) => {
@@ -95,5 +72,6 @@ const dictionarySlice = createSlice({
   },
 });
 
-export const { toggleFavorite, setDragStarredWord } = dictionarySlice.actions;
+export const { toggleStarredWord, setDragStarredWord } =
+  dictionarySlice.actions;
 export default dictionarySlice.reducer;

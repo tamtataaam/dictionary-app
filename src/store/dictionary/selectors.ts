@@ -32,7 +32,7 @@ export const filterStarredWordsSelector = (filters: StarredWordsFilters) =>
     });
   });
 
-export const seatchStarredWordsSelector = (
+export const searchStarredWordsSelector = (
   filters: StarredWordsFilters,
   search: string
 ) =>

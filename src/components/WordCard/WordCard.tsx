@@ -1,55 +1,63 @@
+import './WordCard.css';
+
 import { useAppDispatch } from 'hooks';
-import React, { useState } from 'react';
-import { toggleFavorite } from 'store/dictionary';
+import { FC, KeyboardEvent, MouseEvent, useState } from 'react';
+import { toggleStarredWord } from 'store/dictionary';
 
-import { WordProps } from './types';
+import { WordCardProps } from './types';
 
-export const WordCard = ({ word, sort }: WordProps) => {
-  const [expanded, setExpanded] = useState(false);
+export const WordCard: FC<WordCardProps> = ({
+  word,
+  sort,
+  draggable,
+  onDragStart,
+  onDragOver,
+  onDrop,
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
   const dispatch = useAppDispatch();
 
-  const handleToggleFavorite = (
-    event: React.MouseEvent | React.KeyboardEvent
-  ) => {
+  const handleToggleStarredWord = (event: MouseEvent | KeyboardEvent) => {
     event.stopPropagation();
-    dispatch(toggleFavorite(word));
+    dispatch(toggleStarredWord(word));
   };
 
   const handleExpandRow = () => {
-    setExpanded((prev) => !prev);
+    setIsExpanded((prev) => !prev);
   };
 
   return (
-    <div className="bg-white rounded-sm px-4 py-2">
+    <div
+      className="word-card"
+      draggable={draggable}
+      onDragStart={() => onDragStart?.(word)}
+      onDragOver={onDragOver}
+      onDrop={(e) => onDrop?.(e, word)}
+    >
       <div
         onClick={handleExpandRow}
         onKeyDown={handleExpandRow}
-        className="flex flex-row justify-between items-center hover:cursor-pointer"
+        className="word-card__main-info"
       >
-        <div className="flex gap-8">
-          {sort && <div className="cursor-grab">≡</div>}
-          <span className="font-bold whitespace-nowrap">{word.word}</span>
-          <span className="italic whitespace-nowrap">{word.partOfSpeech}</span>
-          <span className="truncate max-w-2xl">{word.shortdef[0]}</span>
-        </div>
-        <div
-          onClick={handleToggleFavorite}
-          onKeyDown={handleToggleFavorite}
-          className="text-xl text-sky-600 hover:cursor-pointer"
+        {sort && <span className="word-card__sort-icon">≡</span>}
+        <span className="word-card__title">{word.word}</span>
+        <span className="word-card__part">{word.partOfSpeech}</span>
+        <span className="word-card__shortdef">{word.shortdef[0]}</span>
+        <span
+          onClick={handleToggleStarredWord}
+          onKeyDown={handleToggleStarredWord}
+          className="word-card__star"
         >
           {word.starred ? '★' : '☆'}
-        </div>
+        </span>
       </div>
-      {expanded && (
-        <div className="py-2">
-          {word.shortdef.length !== 0 && (
-            <div>
-              Definitions:
-              {word.shortdef.map((shortdef, i) => (
-                <li key={i}>{shortdef}</li>
-              ))}
-            </div>
-          )}
+
+      {!!word.shortdef.length && isExpanded && (
+        <div className="word-card__expand-row">
+          Definitions:
+          {word.shortdef.map((shortdef, index) => (
+            <li key={index}>{shortdef}</li>
+          ))}
         </div>
       )}
     </div>
